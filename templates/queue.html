@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Queue{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/static/images/main_bg.png'); 
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .container {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        width: 80%;
+        max-width: 500px;
+        text-align: center;
+    }
+
+    .queue-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .queue-list li {
+        background: #6c63ff;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .message {
+        margin-top: 20px;
+        color: #ffcc00;
+    }
+
+    .form-container {
+        margin-top: 20px;
+    }
+
+    .form-container input[type="text"] {
+        width: 70%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .form-container button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: purple;
+        color: white;
+        font-weight: bold;
+    }
+
+    .form-container button:hover {
+        background-color: rgb(100, 1, 100);
+    }
+</style>
+
+<div class="container">
+    <h1>Queue Operations</h1>
+    <ul class="queue-list">
+        {% for element in elements %}
+            <li>{{ element }}</li>
+        {% endfor %}
+    </ul>
+
+    <div class="message">
+        {% if message %}
+            {{ message }}
+        {% endif %}
+    </div>
+
+    <div class="form-container">
+        <form method="POST">
+            <input type="text" name="data" placeholder="Enter value" />
+            <button type="submit" name="action" value="enqueue">Enqueue</button>
+            <button type="submit" name="action" value="dequeue">Dequeue</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

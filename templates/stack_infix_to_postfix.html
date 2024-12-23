@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Infix to Postfix Conversion{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/static/images/main_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .container {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        width: 80%;
+        max-width: 500px;
+        text-align: center;
+    }
+
+    .steps {
+        list-style: none;
+        padding: 0;
+        text-align: left;
+    }
+
+    .steps li {
+        background: #6c63ff;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .form-container {
+        margin-top: 20px;
+    }
+
+    .form-container input[type="text"] {
+        width: 70%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .form-container button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: purple;
+        color: white;
+        font-weight: bold;
+    }
+
+    .form-container button:hover {
+        background-color: rgb(100, 1, 100);
+    }
+
+    .message {
+        margin-top: 20px;
+        color: #ffcc00;
+    }
+</style>
+
+<div class="container">
+    <h1>Infix to Postfix Conversion</h1>
+
+    <div class="form-container">
+        <form method="POST">
+            <input type="text" name="infix_expression" placeholder="Enter Infix Expression" required />
+            <button type="submit">Convert</button>
+        </form>
+    </div>
+
+    <div class="message">
+        {% if message %}
+            {{ message }}
+        {% endif %}
+    </div>
+
+    <ul class="steps">
+        {% for step in steps %}
+            <li>{{ step }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
