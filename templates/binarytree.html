@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}Binary Tree{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/static/images/main_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .form-container {
+        width: 900px;
+        min-width: 200px;
+        max-width: 80%;
+        margin-bottom: 5px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        padding: 20px;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    h1 {
+        color: white;
+        font-size: 3rem;
+        margin: 0;
+        padding: 20px 0;
+    }
+
+    select, input, button {
+        padding: 10px;
+        font-size: 1rem;
+        margin: 0px 5px;
+        width: auto;
+    }
+
+    button {
+        background-color: purple;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .visualization-container {
+        width: 60%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        position: relative;
+        margin-bottom: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        padding: 30px;
+    }
+
+    pre {
+        color: white;
+        font-size: 1.2rem;
+        white-space: pre-wrap;
+    }
+</style>
+
+<div class="container">
+    <div class="form-container">
+        <h1>Binary Tree Operations</h1>
+        
+        <div class="row">
+            <input type="number" id="rootValue" placeholder="Set Root">
+            <button onclick="setRoot()">Set Root</button>
+        </div>
+        
+        <div class="row">
+            <select id="parentNode">
+                <option value="" disabled selected>Select Parent Node</option>
+            </select>
+            <input type="number" id="nodeValue" placeholder="Node Value">
+            <select id="direction">
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+            </select>
+            <button onclick="insertNode()">Insert</button>
+        </div>
+        
+        <div class="row">
+            <select id="deleteNode">
+                <option value="" disabled selected>Select Node to Delete</option>
+            </select>
+            <button onclick="deleteNode()">Delete</button>
+        </div>
+    </div>
+
+    <div class="visualization-container">
+        <pre id="treeDisplay">Loading tree...</pre>
+    </div>
+</div>
+
+<script>
+    async function setRoot() {
+        let value = document.getElementById("rootValue").value;
+        if (!value) return alert("Enter root value!");
+
+        let response = await fetch('/works/binarytree/set_root', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ value: value })
+        });
+        let result = await response.json();
+        alert(result.message);
+        updateNodeOptions();
+        displayTree();
+    }
+
+    async function insertNode() {
+        let parent = document.getElementById("parentNode").value;
+        let value = document.getElementById("nodeValue").value;
+        let direction = document.getElementById("direction").value;
+
+        if (!parent || !value) return alert("Select a parent and enter a value!");
+
+        let response = await fetch('/works/binarytree/insert', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ parent: parent, value: value, direction: direction })
+        });
+        let result = await response.json();
+        alert(result.message);
+        updateNodeOptions();
+        displayTree();
+    }
+
+    async function deleteNode() {
+        let value = document.getElementById("deleteNode").value;
+        if (!value) return alert("Select a node to delete!");
+
+        let response = await fetch('/works/binarytree/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ value: value })
+        });
+        let result = await response.json();
+        alert(result.message);
+        updateNodeOptions();
+        displayTree();
+    }
+
+    async function displayTree() {
+        let response = await fetch('/works/binarytree/display');
+        let result = await response.json();
+        document.getElementById("treeDisplay").innerText = result.tree;
+    }
+
+    async function updateNodeOptions() {
+        let response = await fetch('/works/binarytree/get_nodes');
+        let result = await response.json();
+        let options = '<option value="" disabled selected>Select Parent Node</option>' + result.nodes.map(n => `<option value="${n}">${n}</option>`).join('');
+        document.getElementById("parentNode").innerHTML = options;
+        options = '<option value="" disabled selected>Select Node to Delete</option>' + result.nodes.map(n => `<option value="${n}">${n}</option>`).join('');
+        document.getElementById("deleteNode").innerHTML = options;
+    }
+
+    window.onload = () => {
+        displayTree();
+        updateNodeOptions();
+    };
+</script>
+
+{% endblock %}

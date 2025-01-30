@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Blessie{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-image: url('/static/images/main_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        position: relative;
+    }
+
+    .bottom-image {
+        position: absolute;
+        bottom: 0px; 
+        left: 50%;
+        transform: translateX(-50%);
+        height: 800px;
+        width: auto; 
+        z-index: 1; 
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        position: absolute;
+        bottom: 105px; 
+        left: 50%;
+        transform: translateX(-55%);
+        z-index: 2; 
+    }
+
+    .social-icons a {
+        color: purple;
+        font-size: 3.5rem; 
+        text-decoration: none;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+        color: rgb(100, 1, 100);
+        transform: scale(1.2); 
+    }
+
+    @media (max-width: 768px) {
+        .social-icons a {
+            font-size: 3rem;
+        }
+
+        .bottom-image {
+            height: 150px; 
+        }
+    }
+</style>
+
+    <div class="social-icons">
+        <a href="https://www.facebook.com/blessie.alba15/" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/blessiealba/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="mailto:blessjalba@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+
+    <!-- Image placed at the bottom, centered -->
+    <img src="/static/images/blessie_profile.png" alt="Bottom Image" class="bottom-image">
+{% endblock %}

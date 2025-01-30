@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Linked List{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/static/images/main_bg.png'); 
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .container,
+    .linked-list-box {
+        background-color: rgba(0, 0, 0, 0.7); 
+        padding: 20px;
+        border-radius: 10px;
+        color: white; 
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .linked-list-box {
+        position: relative;
+        height: 400px; 
+        overflow-y: auto; 
+        margin-left: 20px;
+    }
+
+    .linked-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .linked-list li {
+        background: #6c63ff;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        color: white;
+        text-align: left;
+    }
+
+    .message {
+        margin-top: 20px;
+        color: #ffcc00;
+    }
+
+    .form-container {
+        margin-top: 20px;
+    }
+
+    .form-container input[type="text"] {
+        width: 70%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .form-container button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: purple;
+        color: white;
+        font-weight: bold;
+    }
+
+    .form-container button:hover {
+        background-color: rgb(100, 1, 100);
+    }
+
+    .wrapper {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+</style>
+
+<div class="wrapper">
+    <div class="container">
+        <h1>Linked List Operations</h1>
+
+        <div class="form-container">
+            <form id="linkedListForm" method="post">
+                <input type="text" id="data" name="data" placeholder="Enter value" />
+
+                <button type="submit" onclick="submitAction('insert_beginning')">Insert at Beginning</button>
+                <button type="submit" onclick="submitAction('insert_end')">Insert at End</button>
+                <button type="submit" onclick="submitAction('search')">Search</button>
+                <button type="submit" onclick="submitAction('remove_beginning')">Remove from Beginning</button>
+                <button type="submit" onclick="submitAction('remove_end')">Remove from End</button>
+                <button type="submit" onclick="submitAction('remove_at')">Remove Specific Item</button>
+            </form>
+        </div>
+
+        <div class="message">
+            {% if message %}
+                {{ message }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="linked-list-box">
+        <ul class="linked-list">
+            {% for element in elements %}
+                <li>{{ element }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    function submitAction(action) {
+        const form = document.getElementById('linkedListForm');
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = action;
+        form.appendChild(actionInput);
+        form.submit();
+    }
+</script>
+{% endblock %}

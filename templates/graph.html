@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Train Network{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/static/images/main_bg.png'); 
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        text-align: center;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        flex-direction: column; 
+        align-items: center; 
+        width: 100%; 
+    }
+
+    .form-container {
+        width: 40%;
+        margin-bottom: 20px; 
+        background-color:rgba(0, 0, 0, 0.7); 
+        border-radius: 10px;
+        padding: 30px;
+        margin-top: 550px;
+    }
+
+    h1 {
+        color: white;
+        font-size: 3rem;
+        margin: 0;
+        padding: 20px 0;
+    }
+
+    select {
+        padding: 10px;
+        font-size: 1rem;
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: purple;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .container {
+        margin-top: 150px; 
+    }
+
+    .map-container {
+        width: 60%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    img {
+        width: 100%; 
+        height: auto;
+        max-width: none;
+    }
+
+</style>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Train Network</h1>
+
+            <form method="POST">
+                <label for="start_station" style="color: white;">Start Station</label>
+                <select name="start_station" required>
+                    <option value="">Select Start Station</option>
+                    {% for station in stations %}
+                        <option value="{{ station }}">{{ station }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="end_station" style="color: white;">End Station</label>
+                <select name="end_station" required>
+                    <option value="">Select End Station</option>
+                    {% for station in stations %}
+                        <option value="{{ station }}">{{ station }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Find Path</button>
+            </form>
+
+            {% if message %}
+                <p style="color: white;">{{ message }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Display the visual map of the entire train network below the form -->
+        <div class="map-container">
+            <img src="data:image/png;base64,{{ img_base64 }}" alt="Train Network">
+        </div>
+    </div>
+</body>
+{% endblock %}

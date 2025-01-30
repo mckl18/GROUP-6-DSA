@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block title %}Sort{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/static/images/main_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .container {
+        display:flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .form-container {
+    width: 1200px;
+    min-width: 200px;
+    max-width: 80%;  
+    margin-bottom: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 5px;
+    overflow: auto; 
+    }
+
+    h1 {
+        color: white;
+        font-size: 3rem;
+        margin: 0;
+        padding: 20px 0;
+    }
+
+    select, input, button {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        font-size: 1rem;
+        margin: 10px 10px;
+        width: 20%;
+    }
+
+    button {
+        background-color: purple;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .visualization-container {
+        width: 60%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        height: 300px;
+        margin-top: 10px;
+        position: relative;
+        margin-bottom: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        padding: 30px;
+    }
+
+    .bar {
+        width: 30px;
+        margin: 2px;
+        background-color: rgb(228, 141, 228);
+        text-align: center;
+        position: relative;
+    }
+
+    .bar span {
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 14px;
+    }
+</style>
+
+<div class="container">
+    <div class="form-container">
+        <h1>Sorting Visualizer</h1>
+        <select id="algorithm">
+            <option value="bubble">Bubble Sort</option>
+            <option value="insertion">Insertion Sort</option>
+            <option value="selection">Selection Sort</option>
+            <option value="quick">Quick Sort</option>
+            <option value="merge">Merge Sort</option>
+        </select>
+        <input type="number" id="numItems" placeholder="Enter number of items">
+        <button onclick="generateRandomNumbers()">Generate</button>
+        <button onclick="startSorting()">Sort</button>
+    </div>
+
+    <div class="visualization-container" id="container"></div>
+</div>
+
+<script>
+    let numbers = [];
+
+    function generateBars(arr) {
+        const container = document.getElementById("container");
+        container.innerHTML = "";
+        arr.forEach(num => {
+            const bar = document.createElement("div");
+            bar.classList.add("bar");
+            bar.style.height = `${num * 5}px`;
+            const label = document.createElement("span");
+            label.innerText = num;
+            bar.appendChild(label);
+            container.appendChild(bar);
+        });
+    }
+
+    function generateRandomNumbers() {
+        let numItems = parseInt(document.getElementById("numItems").value);
+        if (isNaN(numItems) || numItems <= 0) {
+            alert("Please enter a valid number of items");
+            return;
+        }
+        numbers = Array.from({ length: numItems }, () => Math.floor(Math.random() * 50) + 1);
+        generateBars(numbers);
+    }
+
+    async function bubbleSort(arr) {
+        for (let i = 0; i < arr.length - 1; i++) {
+            for (let j = 0; j < arr.length - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+                    generateBars(arr);
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+            }
+        }
+    }
+
+    async function insertionSort(arr) {
+        for (let i = 1; i < arr.length; i++) {
+            let key = arr[i];
+            let j = i - 1;
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+                generateBars(arr);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            arr[j + 1] = key;
+            generateBars(arr);
+        }
+    }
+
+    async function selectionSort(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            let minIdx = i;
+            for (let j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minIdx]) {
+                    minIdx = j;
+                }
+            }
+            [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
+            generateBars(arr);
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+    }
+
+    async function quickSort(arr, left = 0, right = arr.length - 1) {
+        if (left < right) {
+            let pivotIndex = await partition(arr, left, right);
+            await quickSort(arr, left, pivotIndex - 1);
+            await quickSort(arr, pivotIndex + 1, right);
+        }
+    }
+
+    async function partition(arr, left, right) {
+        let pivot = arr[right];
+        let i = left;
+        for (let j = left; j < right; j++) {
+            if (arr[j] < pivot) {
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+                i++;
+                generateBars(arr);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+        }
+        [arr[i], arr[right]] = [arr[right], arr[i]];
+        generateBars(arr);
+        return i;
+    }
+
+    async function mergeSort(arr) {
+        let steps = [];
+
+        async function _mergeSort(arr, left, right) {
+            if (left < right) {
+                let mid = Math.floor((left + right) / 2);
+                await _mergeSort(arr, left, mid);
+                await _mergeSort(arr, mid + 1, right);
+                await merge(arr, left, mid, right);
+            }
+        }
+
+        async function merge(arr, left, mid, right) {
+            let leftArr = arr.slice(left, mid + 1);
+            let rightArr = arr.slice(mid + 1, right + 1);
+            let i = 0, j = 0, k = left;
+
+            while (i < leftArr.length && j < rightArr.length) {
+                if (leftArr[i] <= rightArr[j]) {
+                    arr[k] = leftArr[i];
+                    i++;
+                } else {
+                    arr[k] = rightArr[j];
+                    j++;
+                }
+                k++;
+                generateBars(arr);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+
+            while (i < leftArr.length) {
+                arr[k] = leftArr[i];
+                i++;
+                k++;
+                generateBars(arr);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+
+            while (j < rightArr.length) {
+                arr[k] = rightArr[j];
+                j++;
+                k++;
+                generateBars(arr);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+        }
+
+        await _mergeSort(arr, 0, arr.length - 1);
+        generateBars(arr);
+    }
+
+    async function startSorting() {
+        if (numbers.length === 0) {
+            alert("Please generate numbers first");
+            return;
+        }
+        let algorithm = document.getElementById("algorithm").value;
+        if (algorithm === "bubble") await bubbleSort(numbers);
+        else if (algorithm === "insertion") await insertionSort(numbers);
+        else if (algorithm === "selection") await selectionSort(numbers);
+        else if (algorithm === "quick") await quickSort(numbers);
+        else if (algorithm === "merge") await mergeSort(numbers);
+        generateBars(numbers);
+    }
+</script>
+{% endblock %}

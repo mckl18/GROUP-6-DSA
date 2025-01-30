@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/static/images/contact_bg.png'); 
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+    
+    .chat-icon {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: purple;
+        color: white;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 50px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 4px 4px 8px 2px rgb(0, 0, 0);
+    }
+    
+    .chat-icon:hover {
+        transform: scale(1.1);
+    }
+    
+    .chat-box {
+        position: fixed;
+        bottom: 120px;
+        right: 30px;
+        width: 300px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        display: none;
+        flex-direction: column;
+    }
+    
+    .chat-header {
+        background: purple;
+        color: white;
+        padding: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        text-align: center;
+    }
+    
+    .chat-messages {
+        padding: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .chat-input {
+        display: flex;
+        border-top: 1px solid #ccc;
+    }
+    
+    .chat-input input {
+        flex: 1;
+        border: none;
+        padding: 10px;
+        outline: none;
+    }
+    
+    .chat-input button {
+        background: purple;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="chat-icon" onclick="toggleChat()">
+    ✉ <!-- Message Icon -->
+</div>
+
+<div class="chat-box" id="chatBox">
+    <div class="chat-header">Chat</div>
+    <div class="chat-messages" id="chatMessages">
+        <p><strong>Bot:</strong> How can I help you?</p>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    function toggleChat() {
+        const chatBox = document.getElementById("chatBox");
+        chatBox.style.display = chatBox.style.display === "none" || chatBox.style.display === "" ? "flex" : "none";
+    }
+    
+    function sendMessage() {
+        const userInput = document.getElementById("userInput").value;
+        if (userInput.trim() === "") return;
+        
+        const chatMessages = document.getElementById("chatMessages");
+        
+        const userMessage = document.createElement("p");
+        userMessage.innerHTML = `<strong>You:</strong> ${userInput}`;
+        chatMessages.appendChild(userMessage);
+        
+        document.getElementById("userInput").value = "";
+        
+        setTimeout(() => {
+            const botMessage = document.createElement("p");
+            botMessage.innerHTML = "<strong>Bot:</strong> We received your message. Thank you for contacting us!";
+            chatMessages.appendChild(botMessage);
+        }, 1000);
+    }
+    document.addEventListener("click", function(event) {
+        const chatBox = document.getElementById("chatBox");
+        const chatIcon = document.querySelector(".chat-icon");
+        if (!chatBox.contains(event.target) && !chatIcon.contains(event.target)) {
+            chatBox.style.display = "none";
+        }
+    });
+</script>
+{% endblock %}

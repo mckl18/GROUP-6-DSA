@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}Infix to Postfix Conversion{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/static/images/main_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .container-wrapper {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        justify-content: center;
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .container {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        width: 40%;
+        max-width: 500px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .output-container {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        width: 40%;
+        max-width: 500px;
+        text-align: left;
+    }
+
+    .steps {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .steps li {
+        background: #6c63ff;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .form-container input[type="text"] {
+        width: 70%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .form-container button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: purple;
+        color: white;
+        font-weight: bold;
+    }
+
+    .form-container button:hover {
+        background-color: rgb(100, 1, 100);
+    }
+
+    .message {
+        margin-top: 20px;
+        color: #ffcc00;
+    }
+
+    .back-link {
+        margin-top: 20px;
+        font-size: 1rem;
+        color: white;
+        text-decoration: underline;
+        font-weight: normal;
+    }
+
+    .back-link:hover {
+        color: #ffcc00;
+    }
+</style>
+
+<div class="container-wrapper">
+    <!-- Left side: Input and Form -->
+    <div class="container">
+        <h1>Infix to Postfix Conversion</h1>
+
+        <div class="form-container">
+            <form method="POST">
+                <input type="text" name="infix_expression" placeholder="Enter Infix Expression" required />
+                <button type="submit">Convert</button>
+            </form>
+        </div>
+
+        <div>
+            <a href="{{ url_for('works_stack') }}" class="back-link">← Back to Stack Operations</a>
+        </div>
+    </div>
+
+    <!-- Right side: Output -->
+    <div class="output-container">
+        <h2>Steps:</h2>
+
+        {% if message %}
+            <div class="message">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        <ul class="steps">
+            {% for step in steps %}
+                <li>{{ step }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
